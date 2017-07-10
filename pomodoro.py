@@ -4,26 +4,39 @@ import tkinter as tk
 from tkinter import ttk
 
 
-def main(intervals):
-    print(str(intervals))
-    win = tk.Tk()
-    win.title('Pomodoro')
-    win.resizable(0, 0)
-    button = ttk.Button(win, text='counter')
-    style = ttk.Style()
-    style.configure('Red.TButton', background='red')
+class Pomodoro():
+    def __init__(self, intervals):
+        self.intervals = intervals
+        self.win = tk.Tk()
+        self.win.title('Pomodoro')
+        self.win.resizable(0, 0)
+        self.createButton()
+        self.positionWindow()
 
-    def Action():
-        button.configure(style='Red.TButton')
-        button.configure(text='=')
+    def positionWindow(self):
+        self.win.update()
+        ws = self.win.winfo_screenwidth()
+        hs = self.win.winfo_screenheight()
+        w = self.win.winfo_width()
+        h = self.win.winfo_height()
+        self.win.geometry("%dx%d+%d+%d" % (w, h, ws-w, hs-h))
 
-    button.configure(command=Action)
-    button.grid(column=0, row=0)
-    win.mainloop()
+    def createButton(self):
+        self.button = ttk.Button(self.win, text='counter')
+        self.button.configure(command=self.action)
+        self.button.grid(column=0, row=0)
+        style = ttk.Style()
+        style.configure('Red.TButton', background='red')
+
+    def action(self):
+        self.button.configure(style='Red.TButton')
+        self.button.configure(text='=')
+        self.win.title('X')
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('Error: provide at least one interval')
     else:
-        main([int(arg) for arg in sys.argv[1:]])
+        pomodoro = Pomodoro([int(arg) for arg in sys.argv[1:]])
+        pomodoro.win.mainloop()
